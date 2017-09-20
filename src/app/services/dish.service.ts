@@ -7,6 +7,7 @@ export class DishService {
 
   constructor() { }
 
+  /* methods without promise
   getDishes(): Dish[] {
     return DISHES;
   }
@@ -17,6 +18,19 @@ export class DishService {
 
   getFeaturedDish(): Dish {
     return DISHES.filter((dish) => dish.featured)[0];
+  }
+  */
+
+  getDishes(): Promise<Dish[]> {
+    return Promise.resolve(DISHES);
+  }
+
+  getDish(id: number): Promise<Dish> {
+    return Promise.resolve(DISHES.filter((dish) => (dish.id === id))[0]);
+  }
+
+  getFeaturedDish(): Promise<Dish> {
+    return Promise.resolve(DISHES.filter((dish) => dish.featured)[0]);
   }
 
 }
