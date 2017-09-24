@@ -42,6 +42,10 @@ export class LeaderService {
     return Observable.of(LEADERS).delay(2000);
   }
 
+  getLeader(id: number): Observable<Leader> {
+    return Observable.of(LEADERS.filter((leader) => (leader.id === id))[0]).delay(2000);
+  }
+
   getFeaturedLeaders(): Observable<Leader> {
     return Observable.of(LEADERS.filter((leader) => leader.featured)[0]).delay(2000);
   }
