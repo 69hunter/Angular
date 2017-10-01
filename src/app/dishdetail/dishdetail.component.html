@@ -6,7 +6,7 @@
     fxLayoutGap="10px"
     fxLayoutGap.xs="0">
 
-  <div fxFlex="40" *ngIf="dish" [@visibility]="visibility">
+  <div fxFlex="40" *ngIf="dish"  fxFlexAlign="start" [@visibility]="visibility" [@expand]>
     <md-card>
       <md-card-header>
         <md-card-title>
@@ -37,30 +37,21 @@
   </div>
 
 
-  <div fxFlex="40" fxFlexAlign="start" [@visibility]="visibility">
-    <div *ngIf="dish">
-      <h3 md-title>Comments</h3>
-      <md-list>
-        <md-list-item *ngFor="let comments of dish.comments">
-          <p md-line> {{comments.comment}} </p>
-          <p md-line> {{comments.rating}} Stars </p>
-          <p md-line> -- {{comments.author}} {{comments.date | date}} </p>
-        </md-list-item>
-        <md-list-item *ngIf="commentForm.valid">
-          <p md-line> {{commentForm.value.comment}} </p>
-          <p md-line> {{commentForm.value.rating}} Stars </p>
-          <p md-line> -- {{commentForm.value.author}}</p>
-          <!-- can use {{comment.comment}} -->
-        </md-list-item>
-      </md-list>
-    </div>
-    <div [hidden]="dish  || errMess">
-      <md-spinner></md-spinner><h4>Loading . . . Please Wait</h4>
-    </div>
-    <div *ngIf="errMess">
-      <h2>Error</h2>
-      <h4>{{errMess}}</h4>
-    </div>
+  <div fxFlex="40" *ngIf="dish" fxFlexAlign="start" [@visibility]="visibility" [@expand]>
+    <h3 md-title>Comments</h3>
+    <md-list>
+      <md-list-item *ngFor="let comments of dish.comments">
+        <p md-line> {{comments.comment}} </p>
+        <p md-line> {{comments.rating}} Stars </p>
+        <p md-line> -- {{comments.author}} {{comments.date | date}} </p>
+      </md-list-item>
+      <md-list-item *ngIf="commentForm.valid">
+        <p md-line> {{commentForm.value.comment}} </p>
+        <p md-line> {{commentForm.value.rating}} Stars </p>
+        <p md-line> -- {{commentForm.value.author}}</p>
+        <!-- can use {{comment.comment}} -->
+      </md-list-item>
+    </md-list>
 
     <form novalidate [formGroup]="commentForm" (ngSubmit)="onSubmit()">
       <p>
@@ -86,7 +77,17 @@
       </p>
       <button type="submit" md-button class="background-primary text-floral-white" [disabled]="commentForm.invalid">Submit</button>
     </form>
+
   </div>
+  <div [hidden]="dish  || errMess">
+    <md-spinner></md-spinner><h4>Loading . . . Please Wait</h4>
+  </div>
+  <div *ngIf="errMess">
+    <h2>Error</h2>
+    <h4>{{errMess}}</h4>
+  </div>
+
+
 
 
 </div>
