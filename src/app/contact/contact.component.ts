@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Feedback, ContactType } from '../shared/feedback';
+import { FeedbackService } from '../services/feedback.service';
 
-import { flyInOut } from '../animations/app.animation';
+import { flyInOut, expand } from '../animations/app.animation';
 
 @Component({
   selector: 'app-contact',
@@ -14,7 +15,8 @@ import { flyInOut } from '../animations/app.animation';
   'style': 'display: block;'
   },
   animations: [
-    flyInOut()
+    flyInOut(),
+    expand()
   ]
 })
 export class ContactComponent implements OnInit {
@@ -22,6 +24,10 @@ export class ContactComponent implements OnInit {
   feedbackForm: FormGroup;
   feedback: Feedback;
   contactType = ContactType;
+  feedbackSubmitted: Feedback;
+  errMess: string;
+  showForm = true;
+  showSubmission = false;
 
   formErrors = {
     'firstname': '',
@@ -51,7 +57,9 @@ export class ContactComponent implements OnInit {
     },
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              @Inject('BaseURL') private BaseURL,
+              private feedbackservice: FeedbackService) {
     this.createForm();
   }
 
@@ -75,19 +83,65 @@ export class ContactComponent implements OnInit {
     this.onValueChanged(); // (re)set validation messages now
   }
 
+  // onSubmit() {
+  //   // this.feedback = this.feedbackForm.value;
+  //   // console.log(this.feedback);
+  //   // this.feedbackForm.reset({
+  //   //   firstname: '',
+  //   //   lastname: '',
+  //   //   telnum: '',
+  //   //   email: '',
+  //   //   agree: false,
+  //   //   contacttype: 'None',
+  //   //   message: ''
+  //   // });
+  //
+  //   this.feedback = this.feedbackForm.value;
+  //   console.log(this.feedback);
+	//   this.feedbackservice.submitFeedback(this.feedback)
+  //     .subscribe(feedbackSubmitted => {
+  //   	  this.showFeedback(this.feedback);
+  //   	  this.feedback = null;
+  //   	  },
+  //   	  errMess => this.errMess = <any>errMess
+  // 	  );
+  // }
+  //
+  // showFeedback(feedback: Feedback){
+	//   this.feedbackSubmitted = feedback;
+	//   console.log(this.feedback);
+	//   this.feedbackForm.reset({
+  //
+  //     firstname: '',
+  //     lastname: '',
+  //     telnum: '',
+  //     email: '',
+  //     agree: false,
+  //     contacttype: 'None',
+  //     message: ''
+  //   });
+  //
+	// setTimeout(() => {this.feedbackSubmitted = null;}, 5000);
+  //
+	// }
+
   onSubmit() {
-    this.feedback = this.feedbackForm.value;
-    console.log(this.feedback);
-    this.feedbackForm.reset({
-      firstname: '',
-      lastname: '',
-      telnum: '',
-      email: '',
-      agree: false,
-      contacttype: 'None',
-      message: ''
-    });
+    this.feedback=this.feedbackForm.value;
+    this.feedbackservice.submitFeedback(this.feedback)
+    .subscribe(feedbackSubmitted => {this.feedbackSubmitted = this.feedback; this.showSubmission=true; setTimeout(()=>{this.showSubmission=false;},5000)});
+  	console.log(this.feedback);
+  	this.feedbackForm.reset({
+  		firstname:'',
+  		lastname:'',
+  		telnum:'',
+  		email:'',
+  		agree:false,
+  		contacttype:'None',
+  		message:''
+  	});
   }
+
+
 
   onValueChanged(data?: any) {
     if (!this.feedbackForm) { return; }
